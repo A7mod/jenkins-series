@@ -21,7 +21,7 @@ pipeline {
             steps {
                 sh 'mkdir -p docker-demo'
                 writeFile file: 'docker-demo/Dockerfile', text: '''FROM alpine:latest
-CMD ["echo", "Hello from a Jenkins-built image"]
+CMD ["echo", "Hello from a Jenkins-built image"] '''
                 sh "docker build -t ${IMAGE_TAG} docker-demo/"
             }
         } 
