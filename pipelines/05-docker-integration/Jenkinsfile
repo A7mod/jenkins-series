@@ -1,0 +1,56 @@
+pipeline {
+    agent any 
+
+    environment {
+        APP_NAME = "geenral-docker"
+        IMAGE_TAG = "general-docker-demo:${BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Run Inside a Container') {
+            agent {
+                docker { image 'node:20-alpine'}
+            }
+            steps {
+                sh 'node --version'
+                sh 'echo "Ran this stage inside a real Node/js container"'
+            }
+        }
+
+        stage('Build a  Docker Image') {
+            steps {
+                sh 'mkdir -p docker-demo'
+                sh '''
+                cat > docker-demo/Dockerfile << 'EOF'
+                FROM alpine:latest
+                CMD ["echo", "Hello from a Jenkins-built image"]
+                EOF
+                '''
+                sh "docker build -t ${IMAGE_TAG} docker-demo/"
+            }
+        } 
+
+        stage('Run the Built Image') {
+            steps {
+                sh "docker run --rm ${IMAGE_TAG}"
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                sh "docker rmi ${IMAGE_TAG}"
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo "${APP_NAME} Docker popeline completed successfully."
+        }
+        failure {
+            echo "${APP_NAME} Docker pipeline failed miserably"
+        }
+    }
+
+
+}
