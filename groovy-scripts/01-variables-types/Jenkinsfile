@@ -1,0 +1,50 @@
+pipeline {
+    agent any 
+
+    stages {
+        stage('Variables and Types') {
+            steps {
+                script {
+                    // def = dynamic typing, Groovy infers the type
+                    def name = "John Wick"
+                    def age = 31
+                    def isReady = true
+
+                    echo "name is a ${name.getClass().simpleName}: ${name}"
+                    echo "age is a ${age.getClass().simpleName}: ${age}"
+                    echo "IsReady is a ${isReady.getClass().simpleName}: ${isReady}"
+
+                    // explicit typing also works
+                    String city = "Noida"
+                    int year = 2026
+                    echo "Explicit types work too: ${city}, ${year}"
+
+                    //Truthy/falsy checks - the real gotcha from Java
+                    def emptyList = []
+                    def emptyString = ""
+                    def nullValue = null
+                    def zero = 0
+
+                    if (!emptyList) {
+                        echo "Empty list is falsy"
+                    }
+                    if (!emptyString) {
+                        echo "Empty string is falsy"
+                    }
+                    if (!nullValue) {
+                        echo "Null is falsy"
+                    }
+                    if (!zero) {
+                        echo "Zero is falsy"
+                    }
+
+                    def nonEmptyList = ["one"]
+                    if (nonEmptyList) {
+                        echo "Non-empty list is truthy"
+                    }
+
+                }
+            }
+        }
+    }
+}
