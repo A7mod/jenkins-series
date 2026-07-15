@@ -24,7 +24,7 @@ pipeline {
                 cat > docker-demo/Dockerfile << 'EOF'
                 FROM alpine:latest
                 CMD ["echo", "Hello from a Jenkins-built image"]
-                EOF
+                'EOF'
                 '''
                 sh "docker build -t ${IMAGE_TAG} docker-demo/"
             }
