@@ -1,0 +1,91 @@
+pipeline {
+    agent any 
+    
+    environment {
+        APP_NAME = "general-flow"
+    }
+
+    stages {
+        stage('Parallel checks') {
+            parallel {
+                stage('Unit Tests') {
+                    steps {
+                        sh 'echo "Running unit tests .."'
+                        sh 'sleep 3'
+                        sh 'echo "Unit Tests Passed"'
+                    }
+                }
+
+                stage('Lint Checks') {
+                    steps {
+                        sh 'echo "Running Lint checks .."'
+                        sh 'sleep 3'
+                        sh 'echo "Lint Checks Passed"'
+                    }
+                }
+
+                stage('Security Checks') {
+                    steps {
+                        sh 'echo "Running Security scan .."'
+                        sh 'sleep 5'
+                        sh 'echo "Security scan Passed"'
+                    }
+                }
+            }
+        }
+
+        stage('Flaky Network Call') {
+            steps {
+                retry(3) {
+                    sh '''
+                    if [$((RANDOM % 2)) -eq 0 ]; then
+                        echo "Simulated network call failed, retrying.."
+                        exit 1
+                    else 
+                        echo "Simulated network call succeeded"
+                    fi        
+                    '''
+                }
+            }
+        }
+
+        stage('Time-Limited Step') {
+            steps {
+                timeout(time: 5, unit: 'SECONDS') {
+                    sh 'sleep 2'
+                    sh 'echo "Finished well within the time limit"'
+                }
+            }
+        }
+
+        stage('Approval Gate') {
+            steps {
+                script {
+                    def userInput = input(
+                        id: 'deployApproval',
+                        message: "Deploy ${APP_NAME} to production?",
+                        parameters: [
+                            choice(name: 'DECISION', choices: ['Proceed', 'Abort'], description: 'Choose an Action')
+                        ]
+                    )
+                    echo "Approval decision was : ${userInput}"
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "Deploying ${APP_NAME} to production..."
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "${APP_NAME} control-flow pipeline completed successfully."
+        }
+        failure {
+            echo "${APP_NAME} control-flow pipeline failed."
+        }
+    }
+}
