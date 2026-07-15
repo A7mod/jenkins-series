@@ -20,12 +20,8 @@ pipeline {
         stage('Build a  Docker Image') {
             steps {
                 sh 'mkdir -p docker-demo'
-                sh '''
-                cat > docker-demo/Dockerfile << 'EOF'
-                FROM alpine:latest
-                CMD ["echo", "Hello from a Jenkins-built image"]
-                'EOF'
-                '''
+                writeFile file: 'docker-demo/Dockerfile', text: '''FROM alpine:latest
+CMD ["echo", "Hello from a Jenkins-built image"]
                 sh "docker build -t ${IMAGE_TAG} docker-demo/"
             }
         } 
