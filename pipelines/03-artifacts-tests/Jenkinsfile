@@ -1,0 +1,52 @@
+pipeline {
+    agent any 
+
+    environment {
+        APP_NAME = "general-fire"
+    }
+
+    stages{
+        stage('Build') {
+            steps{
+                echo "Building ${APP_NAME} ..."
+                sh 'mkdir -p build'
+                sh 'echo "This is a simulated build output" > build/app-output.txt'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo "Running tests for ${APP_NAME} ..."
+                sh 'mkdir -p test-results'
+                sh '''
+                cat > test-results/results.xml << 'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="SampleTests" tests="3" failures="0" errors="0" skipped="0">
+    <testcase classname="SampleTests" name="testLogin" time="0.05"/>
+    <testcase classname="SampleTests" name="testCheckout" time="0.03"/>
+    <testcase classname="SampleTests" name="testPayment" time="0.02"/>
+</testsuite>
+EOF
+                '''
+            }
+        }
+        
+    }
+
+    post{
+        always {
+            archiveArtifacts artifacts: 'build/*.txt', fingerprint: true
+            junit 'test-results/results.xml'
+        }
+
+        success {
+            echo "${APP_NAME} pipeline completed successfully."
+        }
+
+        failure {
+            echo "${APP_NAME} pipeline failed miserably - check logs above."
+        }
+
+    }
+
+
+}
