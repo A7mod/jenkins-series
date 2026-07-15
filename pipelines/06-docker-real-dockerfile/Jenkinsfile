@@ -1,0 +1,47 @@
+pipeline {
+    agent any 
+
+    environment {
+        APP_NAME = "general-docker-ii"
+        IMAGE_TAG = "general-demo:${BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Run Inside a Container') {
+            agent {
+                docker { image 'node:20-alpine'}
+            }
+            steps {
+                sh 'node --version'
+                sh 'echo "Ran this stage inside a real Node/js container"'
+            }
+        }
+
+        stage('Build a  Docker Image') {
+            steps {
+                sh "docker build -t ${IMAGE_TAG} pipelines/06-docker-real-dockerfile/app/"
+            }
+        } 
+
+        stage('Run the Built Image') {
+            steps {
+                sh "docker run --rm ${IMAGE_TAG}"
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                sh "docker rmi ${IMAGE_TAG}"
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "${APP_NAME} Docker pipeline completed successfully."
+        }
+        failure {
+            echo "${APP_NAME} Docker pipeline failed."
+        }
+    }
+}
