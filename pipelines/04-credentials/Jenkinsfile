@@ -31,6 +31,6 @@ pipeline {
         success {
             echo "${APP_NAME} credentials pipeline completed successfully."
         }
-
-
+        
+    }
 }
