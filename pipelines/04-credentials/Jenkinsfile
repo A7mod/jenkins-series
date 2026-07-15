@@ -1,0 +1,36 @@
+pipeline {
+    agent any 
+
+    environment {
+        APP_NAME = "general-spy"
+    }
+
+    stages {
+        stage('Use Secret Safely') {
+            steps {
+                withCredentials([string(credentialsId: 'demo-api-key', variable: 'API_KEY')]) {
+                    sh 'echo "Using API key to call external service ..."'
+                    sh 'echo "Key length check: ${#API_KEY} characters"' 
+                }
+            }
+        }
+
+        stage('Proving Masking Works') {
+            steps {
+                withCredentials([string(credentialsId: 'demo-api-key', variable: 'API_KEY')]) {
+                    echo "Attempting to print the secret directly: ${env.API_KEY}"
+                    sh 'echo "Shell echo of secret: $API_KEY"'
+                }
+
+            }
+        }
+
+
+    }
+    post {
+        success {
+            echo "${APP_NAME} credentials pipeline completed successfully."
+        }
+
+
+}
