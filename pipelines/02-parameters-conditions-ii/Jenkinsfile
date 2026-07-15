@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Target environment')
+    }
+
+    environment {
+        APP_NAME = 'general-stack'
+    }
+
+    stages {
+
+        stage('Build') {
+            steps{
+                echo "Building ${APP_NAME} for ${params.ENVIRONMENT} env"
+            }
+        } 
+
+        stage('Test') {
+            when{
+                expression { params.ENVIRONMENT == 'dev' }
+            }
+            steps{
+                sh 'echo "Running unit tests..."'
+                sh 'echo "Running lint checks..."'
+                sh 'echo "All checks passed"'
+            }
+        } 
+
+        stage('Deploy') {
+             when{
+                expression { params.ENVIRONMENT == 'prod' }
+            }
+            steps{
+                echo "Deploying to production..."
+            }
+
+        }
+
+    }
+
+    post{
+        success {
+            echo "${APP_NAME} pipeline completed successfully."
+        }
+        failure {
+            echo "${APP_NAME} pipeline failed miserably - check logs."
+        }
+    }
+}
