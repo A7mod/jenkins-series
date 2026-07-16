@@ -14,7 +14,7 @@ pipeline {
                     def evens = numbers.findAll { it % 2 == 0}
                     echo "Evens: ${evens}"
 
-                    def doubled = numbers.colelct { it * 2 }
+                    def doubled = numbers.collect { it * 2 }
                     echo "Doubled: ${doubled}"
                 }
             }
