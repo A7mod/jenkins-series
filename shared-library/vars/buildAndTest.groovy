@@ -1,4 +1,4 @@
-def call(String appname) {
+def call(String appName) {
     echo "=== Shared Library: buildAndtest called for ${appName} ==="
 
     stage('Build') {
