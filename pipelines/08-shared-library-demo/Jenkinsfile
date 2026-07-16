@@ -1,0 +1,14 @@
+@library('jenkins-series-lib') _ 
+
+pipeline {
+    agent any 
+    stages {
+        stage('Use Shared Library') {
+            steps {
+                script{
+                    buildAndTest('General-Aladdin')
+                }
+            }
+        }
+    }
+}
