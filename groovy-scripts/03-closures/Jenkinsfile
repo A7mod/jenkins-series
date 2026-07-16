@@ -1,0 +1,23 @@
+pipeline {
+    agent any 
+    stages {
+        stage('Closures') {
+            steps {
+                script {
+                    def greet = { name -> echo "Hello, ${name} !" }
+                    greet("John Wick")
+
+                    def numbers = [1,2,3,4,5,6]
+
+                    numbers.each { n -> echo "Number: ${n}"}
+
+                    def evens = numbers.findAll { it % 2 == 0}
+                    echo "Evens: ${evens}"
+
+                    def doubled = numbers.colelct { it * 2 }
+                    echo "Doubled: ${doubled}"
+                }
+            }
+        }
+    }
+}

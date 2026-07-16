@@ -1,0 +1,25 @@
+pipeline {
+    agent any 
+    stages {
+        stage('Lists and Maps') {
+            steps {
+                script {
+                    def envs = ['dev', 'staging', 'prod']
+                    envs.add('qa')
+                    echo "List: ${envs}, size: ${envs.size()}"
+                    echo "First item: ${envs[0]}"
+
+                    def config = [name: 'General-Aladin', replicas: 3, enabled: true]
+                    echo "Dot access: ${config.name}"
+                    echo "Bracket access: ${config['replicas]}"
+                    config.region = 'us-east-1'
+                    echo "After adding key: ${config}"
+
+                    config.each {key. value ->
+                        echo "Config key: ${key} = ${value}" 
+                    }
+                }
+            }
+        }
+    }
+}

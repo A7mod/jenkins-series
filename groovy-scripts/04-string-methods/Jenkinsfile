@@ -1,0 +1,25 @@
+pipeline {
+    agent any 
+    stages {
+        stage('String Methods') {
+            steps {
+                script{
+                    def raw = "  General- Aladdin "
+                    echo "trimmed: '${raw.trim()}'"
+                    echo "Lowercase: ${raw.trim().toLowerCase()}"
+                    echo "Contains 'App': ${raw.contains('App')}"
+                    echo "Replaced: ${raw.trim().replace('General', 'MyCompany')}"
+
+                    def csv = "dev,staging,prod"
+                    def parts = csv.split(',')
+                    echo "Split into: ${parts}"
+
+                    def name = "John Wick"
+                    echo "GString interpolation: My name is ${name} and length is ${name.length()}"
+
+
+                }
+            }
+        }
+    }
+}
