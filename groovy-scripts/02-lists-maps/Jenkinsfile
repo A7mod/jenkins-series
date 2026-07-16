@@ -11,7 +11,7 @@ pipeline {
 
                     def config = [name: 'General-Aladin', replicas: 3, enabled: true]
                     echo "Dot access: ${config.name}"
-                    echo "Bracket access: ${config['replicas]}"
+                    echo "Bracket access: ${config['replicas']}"
                     config.region = 'us-east-1'
                     echo "After adding key: ${config}"
 
