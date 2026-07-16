@@ -15,7 +15,7 @@ pipeline {
                     config.region = 'us-east-1'
                     echo "After adding key: ${config}"
 
-                    config.each {key. value ->
+                    config.each {key, value ->
                         echo "Config key: ${key} = ${value}" 
                     }
                 }
